@@ -1,0 +1,276 @@
+{% extends '_layout.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="/statics/plugins/tab-menu-box/tab.css">
+{% endblock %}
+
+{% block body %}
+    <div style="background-color: #eee">
+        <div class="w body-content">
+            <div class="clearfix">
+
+                <div class="content-l">
+                    <div class="nav-top-area">
+                        <div class="child-nav">
+                            <a href="/r/pic/hot/1" hidefocus="false" class="icons active hotbtn" id="hotts-nav-btn">最热</a>
+                            <a href="/r/pic/new/1" hidefocus="false" class="newbtn" id="newest-nav-btn">最新</a>
+                        </div>
+
+                        {% if userinfo.is_login %}
+                            <a href="javascript:void(0);" class="publish-btn" id="publishBtn">
+                                <span class="ico n1"></span><span class="n2">发布</span>
+                            </a>
+                        {% else %}
+                            <a href="javascript:void(0)" class="publish-btn" id="publishBtn">
+                                <span class="ico n1"></span><span class="n2">发布</span>
+                            </a>
+                        {% endif %}
+
+                    </div>
+                    <div class="content-list" id="content_list">
+                        {% for item in news_list %}
+
+                            <div class="item">
+
+                                <div class="news-pic">
+                                    <img src="" alt="抽屉新热榜" style="display: inline;">
+                                </div>
+
+                                <div class="null-item"></div>
+
+                                <div class="news-content">
+                                    <div class="part1">
+                                        <a href="{{item.2}}" class="show-content" target="_blank">{{item.1}}</a>
+                                        <span class="content-source">-wallstreetcn.com</span>
+                                        <a href="/r/news/hot/1" class="n2">
+                                            <span class="content-kind">{{item.6}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="area-summary">
+                                        <span class="summary">{{item.3}}</span>
+                                    </div>
+                                    <div class="part2">
+                                        <a href="javascript:void(0);" class="digg-a" title="推荐" onclick="DoFavor(this,{{item.0}});">
+                                            {% if item.9 %}
+                                                <span class="hand-icon icon-digg active"></span>
+                                            {% else %}
+                                                <span class="hand-icon icon-digg"></span>
+                                            {% endif %}
+                                            <b id="favor_count_{{item.0}}">{{item.7}}</b>
+                                        </a>
+                                        <a href="javascript:void(0);" class="discus-a" onclick="ToggleCommentArea({{item.0}});">
+                                            <span class="hand-icon icon-discus"></span>
+                                            <b id="comment_count_{{item.0}}">{{item.8}}</b>
+                                        </a>
+                                        <a href="javascript:void(0);" class="collect-a" >
+                                            <span class="hand-icon icon-collect"></span><b>私藏</b>
+                                        </a>
+                                        <a href="#" class="user-a">
+                                            <span><img src=""></span>
+                                            <b>{{item.5}}</b>
+                                        </a>
+                                        <span class="time-into">
+                                            <a class="time-a" href="#" target="_blank">
+                                                <b>{{item.4|date:"Y-m-d H:i:s"}}</b>
+                                            </a>
+                                            <i>入热榜</i>
+                                        </span>
+
+                                    </div>
+                                    <!-- 评论区域 -->
+                                    <div id="comment_area_{{item.0}}" class="comment-box-area hide" >
+                                        <div class="pinglun arrow" id="comt-arrow-8118680"></div>
+                                        <a class="pinglun close-comt" title="关闭" href="javascript:void(0);" onclick="HideCommentArea({{item.0}});"></a>
+
+                                        <div class="corner comment-box clearfix" >
+
+                                            <div class="loading-ico loading-ico-top"  style="margin-left:230px;">加载中，请稍候...</div>
+
+                                            <div class="comment-box-top hide" >
+                                                <div class="tip-1">最热评论(<span>{{item.8}}</span>)</div>
+                                                <div class="tip-2">
+                                                    <a href="#" target="_blank">
+                                                        <em class="pinglun em1"></em>
+                                                        <span>去评论页面</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <ul id="comment_list_{{item.0}}" class="filetree comment-list-top-2 treeview hide">
+
+                                            </ul>
+
+                                            <div class="huifu-top-box hide">
+                                                <div class="box-l txt-input-area-div-top corner no-corner-bottom">
+                                                    <div class="lab-comment-top">回复  <span id="reply_id_{{item.0}}"></span>:</div>
+                                                    <!-- 针对谣言文本输入框无效 -->
+                                                        <textarea id="comment_content_{{item.0}}" maxlength="150" name="txt-huifu-top" class="txt-huifu txt-huifu-top"></textarea>
+                                                </div>
+                                                <div class="box-r">
+                                                    <a href="javascript:void(0);" class="pub-icons add-pub-btn add-pub-btn-unvalid" onclick="DoComment({{item.0}})">评论</a>
+                                                    <a href="javascript:void(0);" class="loading-ico loading-ico-top pub-loading-top hide">发布中...</a>
+                                                </div>
+                                            </div>
+                                            <div class="tip-3 ">
+                                                <a href="javascript:void(0);" class="hiddenCom-Btn" onclick="HideCommentArea({{item.0}});">
+                                                    <em class="pinglun em2"></em>
+                                                    <span>收起</span>
+                                                </a>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                    <div class="pagination">
+                        {{ str_page }}
+                    </div>
+                </div>
+                <div class="content-r">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="shadow hide"></div>
+
+    <div id="publishDialog" class="dialog hide"></div>
+
+    <div id="accountDialog" class="account-dialog hide clearfix">
+        <div id="model_login" class="login left">
+            <div class="header">登录</div>
+            <div class="content">
+                <div style="padding:0 70px">
+                    <div class="tips">
+                        <span>用户名登录</span>
+                        <span style="padding: 0 5px">|</span>
+                        <span>邮箱登录</span>
+                    </div>
+                    <div id="login_error_summary" class="error-msg">
+
+                    </div>
+                    <div class="inp">
+                        <input name="user" type="text" placeholder="请输入用户名或邮箱"/>
+                    </div>
+                    <div class="inp">
+                        <input name="pwd" type="text" placeholder="请输入密码">
+                    </div>
+                    <div class="inp clearfix">
+                        <input name="code" class="check-code" type="text" placeholder="请输入验证码">
+                        <span>
+                            <img class="check-img" src="/check_code/" alt="验证码" onclick="">
+                        </span>
+                    </div>
+                    <div class="extra">
+                        <input type="checkbox" name="autoLogin" checked="checked"/>
+                        <span>一个月内自动登录</span>
+                        <a href="javascript:void(0);" class="right">忘记密码？</a>
+                    </div>
+                    <div class="inp">
+                        <div class="submit" onclick="">
+                            <span>登录</span>
+                            <span class="hide">
+                                <img src="/statics/images/loader.gif" style="height: 16px;width: 16px;">
+                                <span>正在登录</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="model_register" class="register left">
+            <div class="header">
+                <span>注册</span>
+                <div class="dialog-close" onclick="">X</div>
+            </div>
+            <div class="content">
+                <div style="padding: 0 70px;">
+                    <div class="tips">
+                        <span>输入注册信息</span>
+                    </div>
+                    <div id="register_error_summary" class="error-msg">
+
+                    </div>
+                    <div class="inp">
+                        <input name="username" type="text" placeholder="请输入用户名">
+                    </div>
+                    <div class="inp">
+                        <input name="email" type="text" id="email" placeholder="请输入邮箱"/>
+                    </div>
+                    <div class="inp">
+                        <input type="text" name="email_code" class="email-code" placeholder="请输入邮箱验证码">
+                        <a id="fetch_code" class="fetch-code" href="javascript:void(0);">获取验证码</a>
+                    </div>
+                    <div class="inp">
+                        <input name="password" type="password" placeholder="请输入密码">
+                    </div>
+                    <div class="inp">
+                        <div class="submit" onclick="submitRegister(this);">
+                            <span>注册</span>
+                            <span class="hide">
+                                <img src="/statics/images/loader.gif" style="height: 16px;width: 16px;">
+                                <span>正在注册</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="/statics/plugins/tab-menu-box/tab.js"></script>
+    <script type="text/javascript">
+
+    /*
+    点击注册按钮
+    */
+    function submitRegister(ths){
+        $('#register_error_summary').empty();
+        $('#model_register .inp .error').remove();
+
+        $(ths).children(':eq(0)').addClass('hide');
+        $(ths).addClass('not-allow').children(':eq(1)').removeClass('hide');
+
+        var post_dict = {};
+        $('#model_register input').each(function () {
+            post_dict[(this).attr("name")] =$(this).val()
+        });
+
+        $.ajax({
+            url: 'register',
+            type: 'POST',
+            data: post_dict,
+            dataType: 'json',
+            success: function (arg) {
+                if (arg.status){
+                    window.location.href = '/index';
+                }else{
+                    $.each(arg.message, function (k,v) {
+                        var tag = document.createElement('span');
+                        tag.className = 'error';
+                        tag.innerText = v[0]['message'];
+                        $('#model_register input[name="'+ k +'"]').after(tag);
+                    })
+                }
+            }
+        });
+        $(ths).removeClass('not-allow').children(':eq(1)').addClass('hide');
+        $(ths).children(':eq(0)').removeClass('hide');
+
+        $(function(){
+
+        });
+    </script>
+{% endblock %}
